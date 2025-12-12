@@ -1,6 +1,7 @@
 package com.Michele.GestioneMulte.Service;
 
 import com.Michele.GestioneMulte.Dto.SanzioneCompletaDto;
+import com.Michele.GestioneMulte.Exception.NotFoundException;
 import com.Michele.GestioneMulte.Model.SanzioneCompleta;
 import com.Michele.GestioneMulte.Model.SanzioneTemplate;
 import com.Michele.GestioneMulte.Model.User;
@@ -8,6 +9,7 @@ import com.Michele.GestioneMulte.Repository.SanzioneCompletaRepository;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 public class SanzioneCompletaService {
@@ -39,6 +41,20 @@ public class SanzioneCompletaService {
         sanzioneCompleta.setSanzioneCompilata(CorpoSanzione);
         return sanzioneCompletaRepository.save(sanzioneCompleta);
     };
+
+    public SanzioneCompleta getSanzioneCompleta(int id){
+        return sanzioneCompletaRepository.findById(id).orElseThrow(()-> new NotFoundException("Sanzione non trovata"));
+    }
+
+    public List<SanzioneCompleta> getAllSanzioneCompleta(){
+        return sanzioneCompletaRepository.findAll();
+    }
+
+    public List<SanzioneCompleta> getAllMySanzione(Principal principal){
+        User user= userService.findByUsername(principal.getName());
+        return sanzioneCompletaRepository.findByUserId(user.getId());
+    }
+
 
 
 }
